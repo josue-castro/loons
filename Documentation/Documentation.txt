@@ -1,0 +1,68 @@
+# RAPID Google Loon Testbench
+# Laboratory for Applied Remote Sensing Imaging and Photonics
+# (LARSIP)
+# University of Puerto Rico, Mayaguez Campus
+# 2018
+# Fernando Arias <fernando.arias@upr.edu>
+# <@upr.edu>
+# <@upr.edu>
+# ...
+# <@upr.edu>
+
+# =============================================================================
+# System Tweaking
+# =============================================================================
+# Parameters for fine-tuning overall system behavior.
+
+# =============================================================================
+# Signal Modeling
+# =============================================================================
+# Generate the signal transmitted from Google Loon
+# Transponder information @
+# https://dl.ubnt.com/datasheets/rocketm/RocketM_DS.pdf
+# 902-928MHz, 28dbM
+
+# =============================================================================
+# Medium Modeling
+# =============================================================================
+# Generate the transmission medium model for atmosphere + stratosphere section
+# https://www.mathworks.com/help/phased/examples/modeling-the-propagation-of-rf-signals.html
+# Free Space Loss
+# Precipitation Loss
+#  - https://www.itu.int/rec/R-REC-P.838-3-200503-I/en
+# Fog/Cloud loss
+#  - https://www.itu.int/rec/R-REC-P.840-3-199910-S/en
+# Atmospheric gases loss
+#  - https://www.itu.int/rec/R-REC-P.676-10-201309-S/en
+
+
+# Calculate db/km loss under variable conditions.
+
+# =============================================================================
+# Signal Propagation Modeling
+# =============================================================================
+# Adequately propagate the signal through the modeled medium:
+# 1. Calculate distances:
+#    D  - Distance from loon to mobile device = ds + dt
+#    ds - Stratospheric propagation distance
+#    dt - Tropospheric propagation distance
+
+#    D  = sqrt(h^2 + dl^2)
+#    ds = hs/cos(tan^-1(dl/h))
+#    dt = D-ds
+
+#    h  - loon height (approx. 25km)
+#    hs - Stratospheric height
+#    ht - Tropospheric height
+#    dl - Distance from mobile device to loon base (along land)
+#    Diagram @ https://imgur.com/a/X2Tdjdm
+
+# 2. Propagate LTE signal through (ds+dt)km of modeled medium
+# 3. Calculate total propagation dB loss (dB/km * km)
+
+# Received power @ phone (dBm) = 28dBm - calculated loss (in dB).
+
+# Excellent received power > -84dBm
+# Good received power      = [-85dBm,-102dBm]
+# Fair received power      = [-103dBm,-111dBm]
+# Bad received power       < -112dBm
