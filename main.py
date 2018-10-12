@@ -1,6 +1,7 @@
 def main():
-    print(pow(2, 3))
-    sum
+    sigma = 4
+    sigma += 1
+    print(sigma)
 
 if __name__ == '__main__':
     main()

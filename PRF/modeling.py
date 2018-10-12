@@ -41,7 +41,10 @@ cff_av = [
 ]
 
 
-def precipitation_loss(rr, freq, vertical=False):
+def precipitation_loss(rr, freq, distance=1, vertical=False):
+    # rr = Rain Rate (mm/h)
+    # freq = Frequency (GHz)
+    # distance (Km
     if vertical:
         mk = -0.16398
         ck = 0.63297
@@ -72,11 +75,11 @@ def precipitation_loss(rr, freq, vertical=False):
         sigma += aj * m.exp(-pow((m.log10(freq)-bj)/cj, 2))
     alpha = sigma + ma * m.log10(freq) + ca
 
-    return k * pow(rr, alpha)
+    return k * pow(rr, alpha) * distance
 
 
 def main():
-    print(free_space_loss(100, 20))
+    print(precipitation_loss(2, 100))
 
 
 if __name__ == '__main__':
