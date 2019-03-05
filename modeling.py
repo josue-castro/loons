@@ -2,10 +2,10 @@ import math as m
 
 
 def free_space_loss(distance, frequency, gtx=0, grx=0):
-    # Distance in km and frequency in MHz. FSPL result in dBs
-    # Gtx overall transmitter antenna gain including feeder losses
+    # Distance in km and frequency in GHz. FSPL result in dBs
+    # gtx overall transmitter antenna gain including feeder losses
     # grx overall receiver antenna gain including feeder losses
-    fspl = 20*m.log10(distance*frequency) + 32.44 - gtx - grx
+    fspl = 20*m.log10(distance*frequency*1000) + 32.44 - gtx - grx
     return fspl
 
 
@@ -37,14 +37,13 @@ cff_av = [
     [-0.20238, 1.14520, 0.26809],
     [-48.2991, 0.791669, 0.116226],
     [48.5833, 0.791459, 0.116479],
-
 ]
 
 
 def precipitation_loss(rr, freq, distance=1, vertical=False):
     # rr = Rain Rate (mm/h)
     # freq = Frequency (GHz)
-    # distance (Km
+    # distance (Km)
     if vertical:
         mk = -0.16398
         ck = 0.63297
@@ -78,9 +77,29 @@ def precipitation_loss(rr, freq, distance=1, vertical=False):
     return k * pow(rr, alpha) * distance
 
 
-def main():
-    print(precipitation_loss(2, 100))
+def cloudfog_loss(freq, density, temp, distance=1):
+    # Frequency (GHz), Temperature (K)
+    # Density - liquid water density in the cloud or fog (g/m3)
+    f = freq
+    theta = 300 / temp
+    e0 = 77.6 + 103.3*(theta - 1)
+    e1 = 5.48
+    e2 = 3.51
+
+    # principal and secondary relaxation frequencies
+    fp = 20.09 - 142*(theta - 1) + 294*(theta - 1)**2  # GHz
+    fs = 590 - 1500*(theta - 1)  # GHz
+
+    # e'(f) and e''(f)
+    E1 = ((e0 - e1)/(1+(f/fp)**2) + ((e1 - e2)/(1+(f/fs)**2)) + e2)
+    E2 = ((f/fp)*(e0 - e1)/(1+(f/fp)**2) + (f/fs)*((e1 - e2)/(1+(f/fs)**2)))
+
+    N = (2 + E1)/E2
+
+    # specific attenuation coefficient
+    K = (0.819*f)/(E2*(1+N**2))
+    return K*density*distance  # with distance = 1 result dB/Km else dB
 
 
 if __name__ == '__main__':
-    main()
+    print(precipitation_loss(3.3, 100))
