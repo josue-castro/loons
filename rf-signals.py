@@ -9,19 +9,19 @@ parser = argparse.ArgumentParser(
     prog="rf-signals",
     description="This program is used to calculate specific attenuation of radio frequency signals due to "
                 "FSPL, Precipitation, Fog/Cloud and Atmospheric Gases",
-    epilog="Add epilog here",
-    usage='Add usage here'
+    epilog="Add epilog here"
 )
-parser.add_argument('-f', '--frequency', type=float, help='Frequency of signal (GHz)')
-parser.add_argument('-he', '--height', type=float, help='Transmitter height (Km)')
-parser.add_argument('-ht', '--tropopause', type=float, help='Tropopause height at equator (Km)')
-parser.add_argument('-dl', '--distance', type=float, help='Land distance from receiver to transmitter base (Km)')
-parser.add_argument('-rr', '--rainrate', type=float, help='Rate of precipitation in (mm/h)')
-parser.add_argument('-T', '--temperature', type=float, help='Average surface ambient temperature (K)')
-parser.add_argument('-P', '--pressure', type=float, help='Average surface pressure (hPa) at the site')
+required = parser.add_argument_group('required arguments')
+required.add_argument('-he', '--height', type=float, help='Transmitter height (Km)', required=True)
+required.add_argument('-dl', '--distance', type=float, help='Land distance from receiver to transmitter base (Km)', required=True)
+required.add_argument('-ht', '--tropopause', type=float, help='Tropopause height at equator (Km)', required=True)
+required.add_argument('-f', '--frequency', type=float, help='Frequency of signal (GHz)', required=True)
+required.add_argument('-rr', '--rainrate', type=float, help='Rate of precipitation in (mm/h)', required=True)
+required.add_argument('-lwd', '--ldensity', type=float, help='Liquid water density (g/m3)', required=True)
+required.add_argument('-vwd', '--vdensity', type=float, help='Vapor water density (g/m3)', required=True)
+required.add_argument('-T', '--temperature', type=float, help='Average surface ambient temperature (K)', required=True)
+required.add_argument('-P', '--pressure', type=float, help='Average surface pressure (hPa) at the site', required=True)
 parser.add_argument('-el', '--elevation', type=float, help='Elevation angle (degrees)')
-parser.add_argument('-vwd', '--vdensity', type=float, help='Vapor water density (g/m3)')
-parser.add_argument('-lwd', '--ldensity', type=float, help='Liquid water density (g/m3)')
 parser.add_argument('-spw', '--signalpower', type=float, help='Signal power (dBm)')
 
 args = parser.parse_args()
